@@ -1,0 +1,23 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import ProfileHeader from "../components/ProfileHeader.astro";
+import ChatSection from "../components/ChatSection.astro";
+import InfoCard from "../components/InfoCard.astro";
+import Footer from "../components/Footer.astro";
+import "../styles/global.css";
+---
+
+<BaseLayout
+  title="yueyq · 个人主页"
+  description="yueyq 的个人主页——AI Agent 学习者、软件工程硕士、数字分身聊天"
+>
+  <ProfileHeader />
+
+  <!-- 个人介绍：干净排版，无卡片包裹 -->
+  <InfoCard />
+
+  <!-- 数字分身聊天 -->
+  <ChatSection />
+
+  <Footer />
+</BaseLayout>

@@ -1,0 +1,174 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ===== 基础层 ===== */
+@layer base {
+  body {
+    @apply bg-brand-bg text-brand-text font-sans antialiased;
+    @apply min-h-screen flex justify-center;
+    @apply px-4 pt-6 pb-12 max-sm:pt-4 max-sm:pb-10;
+    /* 浅蓝微光 + 极淡网格纹理 */
+    background-image:
+      /* 网格线：横 */
+      linear-gradient(
+        rgba(107, 174, 214, 0.03) 1px,
+        transparent 1px
+      ),
+      /* 网格线：竖 */
+      linear-gradient(
+        90deg,
+        rgba(107, 174, 214, 0.03) 1px,
+        transparent 1px
+      ),
+      /* 微光 */
+      radial-gradient(
+        ellipse at 20% 10%,
+        rgba(107, 174, 214, 0.05) 0%,
+        transparent 50%
+      ),
+      radial-gradient(
+        ellipse at 80% 90%,
+        rgba(107, 174, 214, 0.03) 0%,
+        transparent 50%
+      );
+    background-size:
+      40px 40px,
+      40px 40px,
+      100% 100%,
+      100% 100%;
+  }
+}
+
+/* ===== 组件层 ===== */
+@layer components {
+  /* 卡片：更轻的投影、更细的边框 */
+  .card {
+    @apply bg-brand-surface rounded-2xl border border-brand-border/60;
+    box-shadow: 0 1px 3px rgba(44, 62, 80, 0.04),
+      0 1px 2px rgba(44, 62, 80, 0.03);
+  }
+
+  /* 消息气泡 */
+  .bubble-ai {
+    @apply bg-brand-bubble-ai text-brand-text;
+    @apply rounded-2xl rounded-tl-[6px] border border-[#e8eff5]/70;
+    @apply px-4 py-3 text-sm leading-relaxed break-words;
+    max-width: 78%;
+  }
+
+  .bubble-user {
+    @apply bg-brand-bubble-user text-[#1a3a4f];
+    @apply rounded-2xl rounded-tr-[6px] border border-[#cde2f2]/70;
+    @apply px-4 py-3 text-sm leading-relaxed break-words;
+    max-width: 78%;
+  }
+
+  /* 预设问题按钮 */
+  .preset-chip {
+    @apply px-3 py-1.5 text-[12px] font-medium;
+    @apply text-[#4a7d95] bg-[#f4f8fb];
+    @apply border border-[#dce8f0]/80 rounded-xl;
+    @apply cursor-pointer select-none;
+    @apply transition-all duration-200;
+    @apply hover:bg-[#eaf3f8] hover:border-[#b8d0e0] hover:text-[#356277];
+    @apply active:scale-95;
+  }
+
+  /* 实心标签 */
+  .tag-pill {
+    @apply inline-block px-3 py-1 text-[13px] font-medium rounded-full;
+    @apply bg-brand-accent/60 text-brand-tag-text;
+    @apply select-none;
+    @apply max-sm:text-xs max-sm:px-2.5;
+  }
+
+  /* 空心标签 */
+  .tag-pill-ghost {
+    @apply inline-block px-3 py-1 text-[13px] font-medium rounded-full;
+    @apply bg-transparent border border-brand-border text-[#5a7d8e];
+    @apply select-none;
+    @apply max-sm:text-xs max-sm:px-2.5;
+  }
+}
+
+/* ===== 动画 ===== */
+@layer utilities {
+  @keyframes msg-in {
+    from {
+      opacity: 0;
+      transform: translateY(8px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes typing-bounce {
+    0%,
+    60%,
+    100% {
+      transform: translateY(0);
+      opacity: 0.35;
+    }
+    30% {
+      transform: translateY(-6px);
+      opacity: 1;
+    }
+  }
+}
+
+/* ===== 聊天区滚动条 ===== */
+.chat-scroll::-webkit-scrollbar {
+  width: 4px;
+}
+.chat-scroll::-webkit-scrollbar-track {
+  background: transparent;
+}
+.chat-scroll::-webkit-scrollbar-thumb {
+  @apply bg-[#d8e2ea] rounded-full;
+}
+.chat-scroll::-webkit-scrollbar-thumb:hover {
+  @apply bg-[#bcccd6];
+}
+
+/* ===== 渐变复用 ===== */
+.avatar-gradient {
+  background: linear-gradient(
+    135deg,
+    #b8d9f0 0%,
+    #6baed6 50%,
+    #4a90c4 100%
+  );
+}
+
+.ai-gradient {
+  background: linear-gradient(135deg, #7eb8da 0%, #4a8db5 100%);
+}
+
+/* ===== 响应式：手机端 ===== */
+@media (max-width: 480px) {
+  .bubble-ai,
+  .bubble-user {
+    max-width: 84%;
+    @apply px-3 py-2.5 text-[13.5px];
+  }
+  .bubble-ai {
+    @apply rounded-tl-[4px];
+  }
+  .bubble-user {
+    @apply rounded-tr-[4px];
+  }
+  .card {
+    @apply rounded-xl;
+  }
+}
+
+@media (max-width: 360px) {
+  .bubble-ai,
+  .bubble-user {
+    max-width: 88%;
+    @apply text-[13px];
+  }
+}
