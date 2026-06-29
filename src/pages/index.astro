@@ -1,10 +1,12 @@
 ---
+import "../styles/global.css";
 import BaseLayout from "../layouts/BaseLayout.astro";
 import ProfileHeader from "../components/ProfileHeader.astro";
-import ChatSection from "../components/ChatSection.astro";
 import InfoCard from "../components/InfoCard.astro";
+import Timeline from "../components/Timeline.astro";
 import Footer from "../components/Footer.astro";
-import "../styles/global.css";
+import PortfolioDrawer from "../components/PortfolioDrawer.astro";
+import ChatSection from "../components/ChatSection.astro";
 ---
 
 <BaseLayout
@@ -13,11 +15,21 @@ import "../styles/global.css";
 >
   <ProfileHeader />
 
-  <!-- 个人介绍：干净排版，无卡片包裹 -->
+  <hr class="border-[#c2cdd7] mx-2" />
+
   <InfoCard />
 
-  <!-- 数字分身聊天 -->
-  <ChatSection />
+  <hr class="border-[#c2cdd7] mx-2" />
+
+  <Timeline />
+
+  <hr class="border-[#c2cdd7] mx-2" />
 
   <Footer />
+
+  <!-- 数字分身：fixed 定位，不占页面流 -->
+  <ChatSection />
+
+  <!-- 作品展示：左侧竖式按钮 + 抽屉面板 -->
+  <PortfolioDrawer />
 </BaseLayout>

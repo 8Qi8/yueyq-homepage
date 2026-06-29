@@ -24,10 +24,26 @@ const { title, description } = Astro.props;
     />
   </head>
   <body>
+    <!-- 背景粒子动画 -->
+    <canvas
+      id="bgCanvas"
+      class="fixed inset-0 w-full h-full pointer-events-none"
+      style="z-index: 0;"
+    ></canvas>
+
+    <!-- 页面内容 -->
     <main
-      class="w-full max-w-[580px] flex flex-col gap-5"
+      class="relative w-full max-w-[580px] flex flex-col gap-3"
+      style="z-index: 1;"
     >
       <slot />
     </main>
   </body>
 </html>
+
+<script>
+  import { initBackground } from "../lib/background";
+  import { initClickEffect } from "../lib/click-effect";
+  initBackground();
+  initClickEffect();
+</script>

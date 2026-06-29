@@ -1,0 +1,146 @@
+---
+interface Item {
+  period: string;
+  title: string;
+  icon: string;
+  content: string;
+  /** 最近/当前阶段加重显示 */
+  active?: boolean;
+}
+
+const items: Item[] = [
+  {
+    period: "2021–2024",
+    title: "本科 · 黑龙江科技大学",
+    icon: "🏆",
+    content:
+      "主修计算机科学与技术，积极参与算法竞赛、程序设计竞赛、数学建模等赛事，获多项国家级、省级奖项。担任计算机创新协会副会长，培养了扎实的编程能力和工程实践能力。",
+  },
+  {
+    period: "2024",
+    title: "开启研究生阶段",
+    icon: "🎓",
+    content:
+      "保研攻读计算机专业硕士，开始系统接触科研，逐步建立论文阅读、算法分析和科研思维。",
+  },
+  {
+    period: "2025",
+    title: "工程实践",
+    icon: "💻",
+    content:
+      "完成 Java 后端开发实习，独立开发基于 SpringBoot + Vue 的「研途交流平台」，深入掌握 SpringBoot、MyBatis-Plus、Redis、Vue 等技术栈，积累完整的项目开发经验。",
+  },
+  {
+    period: "2025–至今",
+    title: "AI 科研探索",
+    icon: "🔬",
+    content:
+      "聚焦 Diffusion 与伪装图像生成方向，持续复现 CTCIG、LAKE-RED 等前沿工作，深入研究 ControlNet、多条件控制、语义引导等技术，探索从论文复现走向科研创新。",
+  },
+  {
+    period: "2026–至今",
+    title: "AI Agent & Vibe Coding",
+    icon: "🤖",
+    content:
+      "学习 AI Agent 与 Vibe Coding，探索大语言模型驱动的软件开发方式，关注 Agent 工作流、MCP、AI Coding、智能自动化等方向，尝试将 AI 能力融入科研与开发流程。",
+    active: true,
+  },
+];
+---
+
+<section class="px-2">
+  <h2
+    class="text-xs font-semibold uppercase tracking-[0.15em] text-brand-text-secondary mb-5
+           max-sm:mb-4"
+  >
+    Journey
+  </h2>
+
+  <div class="timeline relative">
+    <!-- 中心线（桌面端）/ 左线（移动端） -->
+    <div
+      class="timeline-line absolute left-[19px] top-2 bottom-2 w-px
+             bg-[#b4c2cf]
+             md:left-1/2 md:-translate-x-px"
+    ></div>
+
+    <div class="flex flex-col gap-0">
+      {items.map((item, i) => {
+        const isLeft = i % 2 === 0;
+
+        return (
+          <div
+            class={`timeline-item relative flex gap-5 pb-8 last:pb-0
+                    md:pb-10
+                    ${isLeft ? "md:flex-row" : "md:flex-row-reverse"}`}
+          >
+            {/* 时间线圆点 */}
+            <div
+              class={`absolute left-[14px] top-[7px] z-10
+                      md:left-1/2 md:-translate-x-1/2
+                      ${item.active
+                        ? "w-[11px] h-[11px] -translate-y-[1px] md:-translate-y-[2px]"
+                        : "w-2.5 h-2.5"}`}
+            >
+              <span
+                class={`block w-full h-full rounded-full border-2 border-white
+                        ${item.active
+                          ? "bg-brand-primary shadow-[0_0_0_4px_rgba(91,158,207,0.25)]"
+                          : "bg-[#b4c2cf]"}`}
+              ></span>
+            </div>
+
+            {/* 占位（移动端隐藏） */}
+            <div class="hidden md:block md:flex-1" />
+
+            {/* 内容卡片 */}
+            <div
+              class={`flex-1 pl-10 md:pl-0 md:flex-1
+                      ${item.active
+                        ? "bg-brand-surface rounded-xl border border-brand-primary/20 px-4 py-3.5 shadow-[0_1px_3px_rgba(74,144,196,0.06)] max-sm:px-3.5 max-sm:py-3"
+                        : ""}`}
+            >
+              <!-- 时间段 -->
+              <span
+                class={`inline-block text-xs font-semibold tracking-[0.12em] uppercase mb-1.5
+                        ${item.active ? "text-brand-primary-dark" : "text-brand-text-secondary"}`}
+              >
+                {item.period}
+              </span>
+
+              <!-- 标题行 -->
+              <h3
+                class={`flex items-center gap-2 text-[15px] font-semibold mb-1.5
+                        ${item.active ? "text-brand-text" : "text-brand-text"}
+                        max-sm:text-[14px]`}
+              >
+                <span class="text-base leading-none">{item.icon}</span>
+                {item.title}
+              </h3>
+
+              <!-- 描述 -->
+              <p
+                class={`text-[13.5px] leading-relaxed
+                        ${item.active ? "text-brand-text-secondary" : "text-brand-text-secondary"}
+                        max-sm:text-[13px]`}
+              >
+                {item.content}
+              </p>
+
+              {/* 活跃标记 */}
+              {item.active && (
+                <span
+                  class="inline-block mt-2 text-[10px] font-medium
+                         text-brand-primary-dark bg-brand-primary/10
+                         px-2 py-0.5 rounded-full tracking-wide"
+                >
+                  current
+                </span>
+              )}
+            </div>
+          </div>
+        );
+      })}
+    </div>
+  </div>
+</section>

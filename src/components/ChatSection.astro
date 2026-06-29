@@ -1,41 +1,72 @@
-<section class="card overflow-hidden flex flex-col">
-  <!-- 聊天头部：简化为一行，去客服感 -->
-  <div
-    class="flex items-center gap-2.5 px-5 py-3.5
-           border-b border-brand-border/50
-           max-sm:px-4 max-sm:py-3"
-  >
-    <div
-      class="w-3.5 h-3.5 rounded-full ai-gradient flex-shrink-0"
-    ></div>
-    <span class="text-sm font-medium text-brand-text tracking-wide">
-      数字分身
-    </span>
-    <span class="text-[11px] text-brand-text-muted ml-auto">
-      问我任何问题
-    </span>
+<!-- 浮动触发按钮 -->
+<button
+  id="chatToggle"
+  class="fixed bottom-6 right-6 z-50
+         w-14 h-14 rounded-full
+         ai-gradient text-white cursor-pointer
+         flex items-center justify-center
+         shadow-[0_4px_16px_rgba(59,120,171,0.3)]
+         transition-all duration-300 ease-out
+         hover:-translate-y-1 hover:shadow-[0_6px_24px_rgba(59,120,171,0.4)]
+         active:scale-95
+         max-sm:bottom-5 max-sm:right-5 max-sm:w-12 max-sm:h-12"
+  aria-label="打开数字分身聊天"
+>
+  <svg id="chatToggleIcon" width="22" height="22" viewBox="0 0 24 24" fill="none"
+       stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+       class="max-sm:w-[18px] max-sm:h-[18px]">
+    <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+  </svg>
+</button>
+
+<!-- 浮动聊天面板 -->
+<div
+  id="chatPanel"
+  class="fixed bottom-24 right-6 z-50
+         w-[380px] max-h-[520px]
+         bg-brand-surface rounded-2xl
+         border border-brand-border
+         shadow-[0_8px_32px_rgba(27,40,56,0.12)]
+         flex flex-col overflow-hidden
+         opacity-0 pointer-events-none
+         translate-y-4 scale-95
+         transition-all duration-250 ease-out
+         max-sm:bottom-20 max-sm:right-2 max-sm:w-[calc(100vw-16px)] max-sm:max-h-[480px]"
+>
+  <!-- 面板头部 -->
+  <div class="flex items-center gap-2.5 px-5 py-3.5 border-b border-brand-border flex-shrink-0">
+    <div class="w-3.5 h-3.5 rounded-full ai-gradient flex-shrink-0"></div>
+    <span class="text-sm font-medium text-brand-text tracking-wide">数字分身</span>
+    <button
+      id="chatClose"
+      class="ml-auto w-7 h-7 rounded-full flex items-center justify-center
+             text-brand-text-muted hover:text-brand-text hover:bg-brand-border/40
+             transition-colors duration-200"
+      aria-label="关闭聊天"
+    >
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
+           stroke="currentColor" stroke-width="2" stroke-linecap="round">
+        <line x1="18" y1="6" x2="6" y2="18"></line>
+        <line x1="6" y1="6" x2="18" y2="18"></line>
+      </svg>
+    </button>
   </div>
 
   <!-- 消息列表 -->
   <div
     id="chatMessages"
-    class="chat-scroll flex-1 min-h-[120px] max-h-[360px] overflow-y-auto
-           flex flex-col gap-3.5 px-4 py-[18px] bg-[#fcfdfe]
+    class="chat-scroll flex-1 min-h-[120px] max-h-[320px] overflow-y-auto
+           flex flex-col gap-3.5 px-4 py-[18px]
            max-sm:max-h-[280px] max-sm:px-3 max-sm:py-3.5 max-sm:gap-2.5
            max-[360px]:max-h-[240px]"
   >
     <div class="flex gap-2.5">
-      <div
-        class="ai-gradient w-8 h-8 rounded-full flex items-center justify-center
-               text-xs font-bold text-white select-none flex-shrink-0"
-      >
-        AI
-      </div>
+      <div class="ai-gradient w-8 h-8 rounded-full flex items-center justify-center
+                  text-xs font-bold text-white select-none flex-shrink-0">AI</div>
       <div class="bubble-ai">
         <p>你好！我是 yueyq 的数字分身&ensp;👋</p>
         <p class="mt-1.5">
           我正在学习 AI Agent 和 Vibe Coding，也在做一些科研任务。有什么想聊的吗？
-          可以问我问题，或者点击下面的快捷提问~
         </p>
       </div>
     </div>
@@ -44,38 +75,26 @@
   <!-- 预设问题 -->
   <div
     id="presetQuestions"
-    class="flex flex-wrap gap-2 px-4 py-3
-           border-t border-brand-border/40
-           max-sm:px-3 max-sm:py-2.5 max-sm:gap-1.5"
+    class="flex flex-wrap gap-2 px-4 py-3 border-t border-brand-border flex-shrink-0
+           max-sm:px-3 max-sm:py-2.5"
   >
-    <button
-      class="preset-chip"
-      data-question="你为什么这么注重细节？"
-    >你为什么这么注重细节？</button>
-    <button
-      class="preset-chip"
-      data-question="你怎么这么有耐心？"
-    >你怎么这么有耐心？</button>
-    <button
-      class="preset-chip"
-      data-question="你为什么总喜欢把问题研究得这么透？"
-    >为什么研究得这么透？</button>
+    <button class="preset-chip" data-question="你为什么这么注重细节？">你为什么这么注重细节？</button>
+    <button class="preset-chip" data-question="你怎么这么有耐心？">你怎么这么有耐心？</button>
+    <button class="preset-chip" data-question="你为什么总喜欢把问题研究得这么透？">为什么研究得这么透？</button>
   </div>
 
   <!-- 输入区域 -->
-  <div
-    class="flex gap-2.5 px-4 py-3 border-t border-brand-border/40
-           max-sm:px-3 max-sm:py-2.5 max-sm:gap-2"
-  >
+  <div class="flex gap-2.5 px-4 py-3 border-t border-brand-border flex-shrink-0
+              max-sm:px-3 max-sm:py-2.5 max-sm:gap-2">
     <input
       type="text"
       id="chatInput"
       class="flex-1 min-w-0 px-4 py-[11px] text-sm font-sans
-             text-brand-text bg-[#f6f9fb] border border-[#e0eaf2]
+             text-brand-text bg-brand-bg border border-brand-border
              rounded-[24px] outline-none
-             placeholder-[#a8bfcc]
+             placeholder-brand-text-muted
              transition-all duration-200
-             focus:border-[#8abcd5] focus:bg-white focus:shadow-[0_0_0_3px_rgba(138,188,213,0.12)]
+             focus:border-brand-primary focus:bg-white focus:ring-[3px] focus:ring-brand-primary/10
              max-sm:px-3.5 max-sm:py-2.5 max-sm:text-[13.5px] max-sm:rounded-[20px]"
       placeholder="输入你的问题..."
       autocomplete="off"
@@ -85,33 +104,72 @@
       class="w-11 h-11 rounded-full flex items-center justify-center flex-shrink-0
              ai-gradient text-white cursor-pointer
              transition-all duration-200
-             shadow-[0_3px_10px_rgba(74,141,181,0.25)]
-             hover:-translate-y-0.5 hover:shadow-[0_5px_16px_rgba(74,141,181,0.35)]
-             active:scale-95 active:shadow-[0_2px_6px_rgba(74,141,181,0.3)]
+             shadow-[0_3px_10px_rgba(59,120,171,0.25)]
+             hover:-translate-y-0.5 hover:shadow-[0_5px_16px_rgba(59,120,171,0.35)]
+             active:scale-95
              disabled:opacity-55 disabled:cursor-not-allowed disabled:translate-y-0
              disabled:shadow-none
              max-sm:w-10 max-sm:h-10"
       aria-label="发送消息"
     >
-      <svg
-        width="20"
-        height="20"
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        stroke-width="2.2"
-        stroke-linecap="round"
-        stroke-linejoin="round"
-        class="max-sm:w-[17px] max-sm:h-[17px]"
-      >
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none"
+           stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"
+           class="max-sm:w-[17px] max-sm:h-[17px]">
         <line x1="22" y1="2" x2="11" y2="13"></line>
         <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
       </svg>
     </button>
   </div>
-</section>
+</div>
 
 <script>
   import { initChat } from "../lib/chat";
+
+  const toggle = document.getElementById("chatToggle") as HTMLButtonElement;
+  const panel = document.getElementById("chatPanel") as HTMLDivElement;
+  const close = document.getElementById("chatClose") as HTMLButtonElement;
+
+  let isOpen = false;
+
+  function openPanel() {
+    isOpen = true;
+    panel.classList.remove("opacity-0", "pointer-events-none", "translate-y-4", "scale-95");
+    toggle.classList.add("opacity-0", "pointer-events-none", "scale-75");
+  }
+
+  function closePanel() {
+    isOpen = false;
+    panel.classList.add("opacity-0", "pointer-events-none", "translate-y-4", "scale-95");
+    toggle.classList.remove("opacity-0", "pointer-events-none", "scale-75");
+  }
+
+  toggle.addEventListener("click", (e) => {
+    e.stopPropagation();
+    if (isOpen) {
+      closePanel();
+    } else {
+      openPanel();
+    }
+  });
+
+  close.addEventListener("click", (e) => {
+    e.stopPropagation();
+    closePanel();
+  });
+
+  // ESC 关闭
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape" && isOpen) closePanel();
+  });
+
+  // 点击面板外关闭
+  document.addEventListener("click", (e) => {
+    const target = e.target as Node;
+    if (isOpen && !panel.contains(target) && !toggle.contains(target)) {
+      closePanel();
+    }
+  });
+
+  // 初始化聊天逻辑
   initChat();
 </script>

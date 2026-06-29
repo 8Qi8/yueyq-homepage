@@ -1,0 +1,165 @@
+---
+interface Item {
+  icon: string;
+  title: string;
+  description: string;
+}
+
+const items: Item[] = [
+  {
+    icon: "🔬",
+    title: "AI 科研",
+    description:
+      "专注 Diffusion 图像生成、伪装图像生成（Camouflaged Image Generation）等方向，持续探索前沿生成模型。",
+  },
+  {
+    icon: "📖",
+    title: "论文复现",
+    description:
+      "完成 CTCIG、LAKE-RED、VGGT、Depth Anything V2 等项目复现，具备较强的科研实践与工程实现能力。",
+  },
+  {
+    icon: "💻",
+    title: "项目开发",
+    description:
+      "独立开发基于 SpringBoot + Vue 的研途交流平台，具备 Java 后端与 Web 全栈开发经验。",
+  },
+  {
+    icon: "🤖",
+    title: "AI Agent",
+    description:
+      "学习并实践 AI Agent、MCP、Workflow 等技术，探索智能体在科研与开发中的应用。",
+  },
+  {
+    icon: "⚡",
+    title: "Vibe Coding",
+    description:
+      "利用 AI Coding 工具辅助开发，关注 AI 原生开发流程，提升开发效率与产品构建能力。",
+  },
+  {
+    icon: "✍️",
+    title: "技术沉淀",
+    description:
+      "持续整理技术博客、论文笔记与项目实践，形成系统化的学习与知识输出。",
+  },
+];
+---
+
+<!-- 遮罩层 -->
+<div
+  id="portfolioOverlay"
+  class="fixed inset-0 z-40 bg-[#1b2838]/30 opacity-0 pointer-events-none
+         transition-opacity duration-300 ease-out"
+></div>
+
+<!-- 抽屉面板 -->
+<div
+  id="portfolioDrawer"
+  class="fixed left-0 top-0 bottom-0 z-50
+         w-[420px] max-w-[88vw]
+         bg-brand-surface border-r border-brand-border
+         shadow-[4px_0_32px_rgba(27,40,56,0.1)]
+         flex flex-col
+         -translate-x-full
+         transition-transform duration-350 ease-out
+         max-sm:max-w-[92vw]"
+>
+  <!-- 头部 -->
+  <div class="flex items-center justify-between px-6 py-5 border-b border-brand-border flex-shrink-0">
+    <h2 class="text-lg font-semibold text-brand-text tracking-wide">作品展示</h2>
+    <button
+      id="portfolioClose"
+      class="w-8 h-8 rounded-full flex items-center justify-center
+             text-brand-text-muted hover:text-brand-text hover:bg-brand-border/50
+             transition-colors duration-200"
+      aria-label="关闭"
+    >
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none"
+           stroke="currentColor" stroke-width="2" stroke-linecap="round">
+        <line x1="18" y1="6" x2="6" y2="18"></line>
+        <line x1="6" y1="6" x2="18" y2="18"></line>
+      </svg>
+    </button>
+  </div>
+
+  <!-- 内容列表 -->
+  <div class="flex-1 overflow-y-auto px-6 py-5 space-y-5 max-sm:px-4 max-sm:py-4 max-sm:space-y-4">
+    {items.map((item) => (
+      <div class="flex gap-4">
+        <!-- 左侧图标 -->
+        <div class="w-10 h-10 rounded-xl bg-brand-accent/80 flex items-center justify-center
+                    text-lg flex-shrink-0 select-none">
+          {item.icon}
+        </div>
+        <!-- 右侧文本 -->
+        <div class="flex flex-col gap-1 min-w-0">
+          <h3 class="text-[15px] font-semibold text-brand-text leading-snug">
+            {item.title}
+          </h3>
+          <p class="text-[13.5px] text-brand-text-secondary leading-relaxed
+                    max-sm:text-[13px]">
+            {item.description}
+          </p>
+        </div>
+      </div>
+    ))}
+  </div>
+</div>
+
+<!-- 左侧竖式触发按钮 -->
+<button
+  id="portfolioToggle"
+  class="fixed left-0 top-1/2 -translate-y-1/2 z-30
+         py-5 px-2.5
+         bg-brand-surface border border-brand-border border-l-0
+         rounded-r-lg
+         text-brand-text-secondary text-[13px] font-semibold
+         tracking-[0.3em]
+         cursor-pointer select-none
+         shadow-[2px_0_12px_rgba(27,40,56,0.04)]
+         transition-all duration-250 ease-out
+         hover:text-brand-primary-dark hover:pr-3.5 hover:bg-brand-bg/50
+         active:scale-95
+         max-sm:py-4 max-sm:px-2 max-sm:text-[11px] max-sm:tracking-[0.2em]"
+  aria-label="打开作品展示"
+  style="writing-mode: vertical-rl;"
+>
+  作品展示
+</button>
+
+<script>
+  const toggle = document.getElementById("portfolioToggle") as HTMLButtonElement;
+  const drawer = document.getElementById("portfolioDrawer") as HTMLDivElement;
+  const overlay = document.getElementById("portfolioOverlay") as HTMLDivElement;
+  const close = document.getElementById("portfolioClose") as HTMLButtonElement;
+
+  let isOpen = false;
+
+  function openDrawer() {
+    isOpen = true;
+    drawer.classList.remove("-translate-x-full");
+    overlay.classList.remove("opacity-0", "pointer-events-none");
+  }
+
+  function closeDrawer() {
+    isOpen = false;
+    drawer.classList.add("-translate-x-full");
+    overlay.classList.add("opacity-0", "pointer-events-none");
+  }
+
+  toggle.addEventListener("click", (e) => {
+    e.stopPropagation();
+    openDrawer();
+  });
+
+  close.addEventListener("click", (e) => {
+    e.stopPropagation();
+    closeDrawer();
+  });
+
+  overlay.addEventListener("click", closeDrawer);
+
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape" && isOpen) closeDrawer();
+  });
+</script>

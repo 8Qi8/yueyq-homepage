@@ -1,4 +1,11 @@
-import { getResponse } from "./responses";
+interface ChatMessage {
+  role: "user" | "assistant";
+  content: string;
+}
+
+/** 保留最近 N 轮对话作为上下文 */
+const history: ChatMessage[] = [];
+const MAX_HISTORY = 10;
 
 /** HTML 转义 */
 function escapeHTML(str: string): string {
@@ -7,7 +14,7 @@ function escapeHTML(str: string): string {
   return div.innerHTML;
 }
 
-/** 创建消息 DOM 元素 */
+/** 创建消息 DOM */
 function createMessage(
   content: string,
   role: "user" | "ai",
@@ -53,7 +60,30 @@ function createTypingBubble(): HTMLDivElement {
   return div;
 }
 
-/** 初始化聊天功能 */
+/** 调用 DeepSeek API（通过 Astro 服务端代理） */
+async function fetchReply(userMessage: string): Promise<string> {
+  // 构建消息列表：只发送最近几轮 + 当前消息
+  const messages = [
+    ...history.slice(-MAX_HISTORY),
+    { role: "user" as const, content: userMessage },
+  ];
+
+  const res = await fetch("/api/chat", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ messages }),
+  });
+
+  const data = await res.json();
+
+  if (!res.ok) {
+    throw new Error(data.error || "请求失败");
+  }
+
+  return data.reply;
+}
+
+/** 初始化聊天 */
 export function initChat(): void {
   const container = document.getElementById("chatMessages");
   const input = document.getElementById("chatInput") as HTMLInputElement | null;
@@ -68,8 +98,7 @@ export function initChat(): void {
     container.scrollTop = container.scrollHeight;
   };
 
-  /** 发送一条消息 */
-  function send(text?: string): void {
+  async function send(text?: string): Promise<void> {
     const msg = (text ?? input!.value).trim();
     if (!msg || busy) return;
 
@@ -83,24 +112,38 @@ export function initChat(): void {
 
     if (!text) input!.value = "";
 
-    // 正在输入动画
+    // 正在输入指示器
     const typing = createTypingBubble();
     container!.appendChild(typing);
     scrollDown();
 
-    // 模拟延迟后回复
-    setTimeout(() => {
-      document.getElementById("typing-indicator")?.remove();
+    try {
+      const reply = await fetchReply(msg);
 
-      const reply = getResponse(msg);
+      // 记录对话历史
+      history.push({ role: "user", content: msg });
+      history.push({ role: "assistant", content: reply });
+      // 防止历史过长
+      if (history.length > MAX_HISTORY * 2) {
+        history.splice(0, 2);
+      }
+
+      // 移除 typing、显示回复
+      document.getElementById("typing-indicator")?.remove();
       container!.appendChild(createMessage(reply, "ai"));
       scrollDown();
-
+    } catch (err) {
+      document.getElementById("typing-indicator")?.remove();
+      const errorMsg =
+        err instanceof Error ? err.message : "出了点问题，稍后再试";
+      container!.appendChild(createMessage(`⚠️ ${errorMsg}`, "ai"));
+      scrollDown();
+    } finally {
       busy = false;
       sendBtn!.disabled = false;
       input!.disabled = false;
       input!.focus();
-    }, 500 + Math.random() * 700);
+    }
   }
 
   sendBtn.addEventListener("click", () => send());
@@ -112,7 +155,6 @@ export function initChat(): void {
     }
   });
 
-  // 预设问题
   presets.forEach((btn) => {
     btn.addEventListener("click", () => {
       if (busy) return;
