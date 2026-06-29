@@ -160,7 +160,6 @@ export function initChat(): void {
       if (busy) return;
       const q = btn.dataset.question;
       if (q) {
-        input.value = q;
         send(q);
       }
     });
